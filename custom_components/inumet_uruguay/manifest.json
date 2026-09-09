@@ -7,7 +7,7 @@
   "documentation": "https://github.com/matbott/ha-inumet-uruguay/blob/main/README.md",
   "integration_type": "service",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/matbott/inumet-ha/issues",
+  "issue_tracker": "https://github.com/matbott/ha-inumet-uruguay/issues",
   "requirements": [],
-  "version": "3.4.1"
+  "version": "3.5.0"
 }

@@ -4,6 +4,9 @@
 
 Esta es una integración personalizada para Home Assistant que obtiene datos meteorológicos directamente de las fuentes de datos públicas del **Instituto Uruguayo de Meteorología (Inumet)**.
 
+La integración incluye su propio cliente para las fuentes públicas de Inumet. No usa
+ni depende de `inumet_api` u otras bibliotecas meteorológicas de terceros.
+
 ![image](https://github.com/user-attachments/assets/d903210a-4761-45eb-9c35-9c49e8fa47b6)
 
 Proporciona monitoreo de alertas meteorológicas, condiciones actuales de estaciones y el pronóstico extendido para todo el país, permitiendo una integración completa y detallada del tiempo de Uruguay en tu instancia de Home Assistant.
@@ -14,6 +17,7 @@ Proporciona monitoreo de alertas meteorológicas, condiciones actuales de estaci
 * **Selección Dinámica de Estaciones:** Al configurar, la integración carga la lista completa de estaciones meteorológicas oficiales de Inumet y la presenta en un menú desplegable para una fácil selección.
 * **Múltiples Estaciones:** Permite configurar **hasta 3 instancias diferentes** para monitorear 3 estaciones meteorológicas de forma simultánea.
 * **Intervalo de Actualización Personalizable:** Permite al usuario definir la frecuencia de actualización (entre 30 y 240 minutos) durante la configuración y modificarla posteriormente desde las opciones de la integración.
+* **Fuentes Oficiales con Respaldo:** Descubre las rutas publicadas por Inumet y conserva rutas de respaldo para tolerar cambios o caídas parciales.
 * **Entidades Completas:** Crea un dispositivo por cada estación configurada, el cual agrupa:
     * Una entidad `weather` principal con el pronóstico de varios días.
     * Sensores individuales para temperatura, humedad, presión y viento.
@@ -30,12 +34,12 @@ Si tienes [HACS (Home Assistant Community Store)](https://hacs.xyz/) instalado, 
 1.  Abre HACS en tu Home Assistant.
 2.  Ve a **Integraciones**.
 3.  Haz clic en los tres puntos en la esquina superior derecha y selecciona **"Repositorios Personalizados"**.
-4.  Pega la URL de este repositorio (`https://github.com/matbott/inumet-uruguay-ha`) en el campo, selecciona la categoría **"Integración"** y haz clic en **"Añadir"**.
+4.  Pega la URL de este repositorio (`https://github.com/matbott/ha-inumet-uruguay`) en el campo, selecciona la categoría **"Integración"** y haz clic en **"Añadir"**.
 5.  La integración aparecerá en la lista. Haz clic en **"Instalar"**.
 
 ### Método 2: Instalación Manual
 
-1.  Ve a la sección de [Releases](https://github.com/matbott/inumet-uruguay-ha/releases) de este repositorio y descarga el archivo `.zip` de la última versión.
+1.  Ve a la sección de [Releases](https://github.com/matbott/ha-inumet-uruguay/releases) de este repositorio y descarga el archivo `.zip` de la última versión.
 2.  Descomprime el archivo.
 3.  Copia la carpeta `inumet_uruguay` que se encuentra dentro de `custom_components` en tu descarga.
 4.  Pégala dentro de la carpeta `custom_components` de tu instalación de Home Assistant. (La ruta final debería ser `<config>/custom_components/inumet_uruguay`).
@@ -111,6 +115,8 @@ Desarrollado por **@matbott & 🤖**.
 
 Esta es una integración no oficial y no está afiliada ni respaldada por Inumet. Depende de APIs públicas que podrían cambiar sin previo aviso, lo que podría causar que la integración deje de funcionar.
 
-## Agradecimiento:
+## Origen del proyecto
 
-Gracias a https://github.com/aronkahrs-us/inumet-weather-ha por la implementacion que dio lugar a este desarrollo.
+Este proyecto surgió originalmente a partir de ideas de
+https://github.com/aronkahrs-us/inumet-weather-ha. La implementación actual mantiene
+un cliente propio y consulta directamente las fuentes públicas oficiales de Inumet.

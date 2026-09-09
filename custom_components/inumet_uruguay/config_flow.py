@@ -1,21 +1,22 @@
 """Config flow for Inumet Uruguay."""
-from __future__ import annotations
-from typing import Any
-import voluptuous as vol
 
+from __future__ import annotations
+
+from typing import Any
+
+import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
-from homeassistant.helpers.aiohttp_client import async_get_clientsession  # ✅ nuevo import
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-# --- MODIFICACIÓN: Importar constantes para el formulario ---
+from .api import InumetApiClient, InumetApiError
 from .const import (
-    DOMAIN,
-    ESTADO_ACTUAL_URL,
-    DEFAULT_UPDATE_INTERVAL,
     CONF_STATION_ID,
     CONF_STATION_NAME,
     CONF_UPDATE_INTERVAL,
+    DEFAULT_UPDATE_INTERVAL,
+    DOMAIN,
 )
 
 
@@ -50,26 +51,21 @@ class InumetFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
             return self.async_create_entry(title=station_name, data=data_to_save)
 
-        # --- CAMBIO CLAVE: reemplazar httpx por aiohttp de Home Assistant ---
         try:
             session = async_get_clientsession(self.hass)
-            async with session.get(ESTADO_ACTUAL_URL, timeout=10) as response:
-                if response.status != 200:
-                    errors["base"] = "cannot_connect"
-                else:
-                    data = await response.json()
+            data = await InumetApiClient(session).async_get_observations()
+            station_options = {
+                station["id"]: station.get("displayNamePublic")
+                or station.get("nombre")
+                or str(station["id"])
+                for station in data.get("estaciones", [])
+                if station.get("id") is not None and station.get("gerencia") == "INUMET"
+            }
+            self.station_options = dict(
+                sorted(station_options.items(), key=lambda item: item[1])
+            )
 
-            if not errors:
-                station_options = {
-                    station["id"]: station["nombre"]
-                    for station in data["estaciones"]
-                    if station.get("gerencia") == "INUMET"
-                }
-                self.station_options = dict(
-                    sorted(station_options.items(), key=lambda item: item[1])
-                )
-
-        except Exception:
+        except InumetApiError:
             errors["base"] = "cannot_connect"
 
         if not self.station_options:

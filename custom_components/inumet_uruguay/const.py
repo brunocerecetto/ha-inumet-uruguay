@@ -1,17 +1,19 @@
 """Constants for the Inumet Uruguay integration."""
-from datetime import timedelta
 
 DOMAIN = "inumet_uruguay"
 NAME = "Inumet Uruguay"
 MANUFACTURER = "matbott & 🤖"
-VERSION = "3.4.1"
+VERSION = "3.5.0"
 
-# URLs de la API
-ESTADO_ACTUAL_URL = "https://www.inumet.gub.uy/reportes/estadoActual/datos_inumet_ui_publica.mch"
-ALERTS_URL = "https://w2b.inumet.gub.uy/oapi/collections/urn:wmo:md:uy-inumet:cap-alerts/items?f=json"
-FORECAST_URL = "https://www.inumet.gub.uy/reportes/pronosticos/pronosticoV4.json"
-GENERAL_ALERTS_URL = "https://inumet.gub.uy/reportes/riesgo/advGral.mch" # <-- URL NUEVA
-ALERTS_CHECK_URL = "https://www.inumet.gub.uy/admin/check-avisos"
+# Official public data sources. The resource index is used to discover movable paths.
+BASE_URL = "https://www.inumet.gub.uy"
+INFO_RESOURCES_PATH = "android/info_recursosV5.json"
+ESTADO_ACTUAL_PATH = "reportes/estadoActual/datos_inumet_ui_publica.mch"
+ESTADO_ACTUAL_V2_PATH = "reportes/estadoActual/estadoActualV2.mch"
+ESTACIONES_PATH = "reportes/estaciones/estaciones.mch"
+FORECAST_PATH = "reportes/pronosticos/pronosticoV4.json"
+GENERAL_ALERTS_PATH = "reportes/riesgo/advGral.mch"
+SPECIAL_ALERTS_PATH = "reportes/riesgo/avisoGral.mch"
 
 # Intervalo de actualización
 DEFAULT_UPDATE_INTERVAL = 30
