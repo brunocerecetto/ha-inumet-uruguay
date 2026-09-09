@@ -3,7 +3,7 @@
 DOMAIN = "inumet_uruguay"
 NAME = "Inumet Uruguay"
 MANUFACTURER = "matbott & 🤖"
-VERSION = "3.5.0"
+VERSION = "3.5.1"
 
 # Official public data sources. The resource index is used to discover movable paths.
 BASE_URL = "https://www.inumet.gub.uy"
