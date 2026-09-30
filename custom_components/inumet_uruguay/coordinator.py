@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 from collections.abc import Awaitable
 from datetime import timedelta
@@ -46,26 +47,26 @@ class InumetDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         )
 
     async def _async_find_latest_uv_url(self) -> str | None:
-        """Find the latest UV map by searching backwards in ten-minute steps."""
-        now_utc = dt_util.utcnow()
-        for index in range(12):
-            check_time = now_utc - timedelta(minutes=index * 10)
-            rounded_minute = (check_time.minute // 10) * 10
-            time_str = f"{check_time.hour:02d}{rounded_minute:02d}"
-            path = (
-                f"reportes/indice_uv/iuvcsk_{check_time:%Y}{check_time:%j}_"
-                f"{time_str}.webp"
-            )
-            url = f"{BASE_URL}/{path}"
-            try:
-                async with self.session.head(
-                    url, timeout=aiohttp.ClientTimeout(total=5)
-                ) as response:
-                    if response.status == 200:
-                        return url
-            except (aiohttp.ClientError, asyncio.TimeoutError):
-                continue
-        return None
+        """Find the latest UV map from the listing used by Inumet's UV viewer."""
+        try:
+            async with self.session.get(
+                f"{BASE_URL}/reportes/geonetcast/uv.json",
+                timeout=aiohttp.ClientTimeout(total=10),
+            ) as response:
+                if response.status != 200:
+                    return None
+                listing = json.loads(await response.text())
+                # The listing redirects to another domain; images live next to it.
+                base = str(response.url).rsplit("/", 1)[0]
+        except (aiohttp.ClientError, asyncio.TimeoutError, ValueError):
+            return None
+
+        paths = [
+            path
+            for path in listing.get("LES-inidice_uv", [])
+            if isinstance(path, str) and path.rsplit("/", 1)[-1].startswith("iuvcsk_")
+        ]
+        return f"{base}/{max(paths)}" if paths else None
 
     async def _result_or_previous(
         self,
